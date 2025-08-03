@@ -18,14 +18,13 @@ Due to time constraints, I haven’t added it yet, but it would be possible to e
 ![Big Numbers](https://github.com/GuiilhermeLorenzetti/CloudWalk/raw/main/imagem/big_number.png)
 
 If the user wishes to explore any of the main indicators in more detail, they can select it from the side menu:
+The selected indicator will be reflected across all visuals below the selection.
 
 ![Artifacts](https://github.com/GuiilhermeLorenzetti/CloudWalk/raw/main/imagem/artifacts.png)
 
-The selected indicator will be reflected across all visuals below the selection.
+For more complex analyses, the report includes the “Report” tab, which simulates a pivot table structure. In this tab, the user can choose which metrics and dimensions to cross, providing flexibility to answer specific questions.
 
 ![Analytical Report](https://github.com/GuiilhermeLorenzetti/CloudWalk/raw/main/imagem/analytical.png)
-
-For more complex analyses, the report includes the “Report” tab, which simulates a pivot table structure. In this tab, the user can choose which metrics and dimensions to cross, providing flexibility to answer specific questions.
 
 In production environments, it’s common to apply techniques to reduce processing usage in this area (such as measures with conditional visibility, automatic filters, or dynamic aggregations). However, I chose to keep the navigation simpler here, avoiding unnecessary clicks in the user's journey.
 
