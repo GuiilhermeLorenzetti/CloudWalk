@@ -31,3 +31,35 @@ The dashboard was designed with a logic that highlights key indicators at first 
 
 You can find a more detailed description of the visuals, an explanatory video, and the PBIX file at the link provided above.
 
+## Considerations on the Analysis
+
+All mandatory questions requested in the challenge can be answered through the developed report. In addition, it also addresses common needs such as aggregations, averages, and basic distribution analyses.
+
+## Limitations and Highlighted Insights
+
+Due to the simplicity of the dataset, deeper or more complex analyses were limited. Still, some relevant patterns are worth highlighting:
+
+1. **Legal Entities (PJ) transact more than Individuals (PF)**  
+Legal entities dominate both in total transaction value and transaction frequency.  
+This suggests distinct behavioral profiles between PF and PJ, indicating that strategic actions and analytical models should treat them separately.
+
+2. **POS vs. TAP by Entity Type**  
+POS transactions are largely dominated by legal entities (PJ) in absolute value.  
+On the other hand, TAP is much more commonly used by individuals (PF):  
+PF transacts approximately 4.59 billion via TAP, compared to around 1.58 billion by PJ.  
+This behavior may be related to the informality and ease of using TAP via mobile devices among individuals.
+
+3. **Anticipation Method and Nitro/D0**  
+There are differences in average ticket size and merchant base depending on the anticipation method selected.  
+This suggests that the choice of anticipation method is associated with the user’s or merchant’s transactional profile.
+
+4. **Most Profitable Segments**  
+PJ in the "normal" price tier represents the majority of the total transacted value.  
+However, there are growth opportunities in other segments, such as:  
+PF using TAP, where strategies could focus on increasing average ticket size or transaction frequency.
+
+5. **Stability Over Time**  
+The time series did not show any abrupt spikes or drops.  
+This may indicate operational stability or highlight the need for more sensitive methods to detect subtle variations.
+
+
