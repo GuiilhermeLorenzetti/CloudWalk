@@ -1,10 +1,10 @@
-# Ambiente local com Docker e PostgreSQL
+# Local Environment with Docker and PostgreSQL
 
-Para estruturar minha análise, utilizei um ambiente local com PostgreSQL rodando em um container Docker. Isso me permitiu maior controle sobre os dados, execução eficiente de queries SQL e simulação de um pequeno pipeline de dados.
+To structure my analysis, I used a local environment with PostgreSQL running in a Docker container. This allowed me greater control over the data, efficient execution of SQL queries, and simulation of a small data pipeline.
 
-## Inicialização do banco de dados
+## Database Initialization
 
-O banco foi criado com o seguinte comando:
+The database was created with the following command:
 
 ```bash
 docker run --name meu-postgres \
@@ -15,9 +15,9 @@ docker run --name meu-postgres \
   -d postgres
 ```
 
-## Replicando o ambiente
+## Replicating the Environment
 
-A base de dados já está populada e pronta para análise. Para replicar o ambiente, basta subir o container e restaurar o dump que estou enviando (`desafio_dump.sql`) com os seguintes comandos:
+The database is already populated and ready for analysis. To replicate the environment, simply start the container and restore the dump I'm providing (`desafio_dump.sql`) using the following commands:
 
 ```bash
 docker cp desafio_dump.sql meu-postgres:/desafio_dump.sql
@@ -25,6 +25,6 @@ docker exec -it meu-postgres bash
 psql -U meuusuario -d meubanco -f /desafio_dump.sql
 ```
 
-## Consultas SQL
+## SQL Queries
 
-Deixei um arquivo em texto com as queries utilizadas, caso queiram analisar de maneira mais fácil.
+I’ve included a text file with the queries used, in case you want to review them more easily.
