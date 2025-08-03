@@ -62,4 +62,8 @@ PF using TAP, where strategies could focus on increasing average ticket size or 
 The time series did not show any abrupt spikes or drops.  
 This may indicate operational stability or highlight the need for more sensitive methods to detect subtle variations.
 
+# Ai Agent 
+
+Architecture and Proof of Concept -> https://github.com/GuiilhermeLorenzetti/CloudWalk/tree/main/AI%20Agent
+
 
