@@ -1,0 +1,150 @@
+-- DROP das tabelas, se já existirem 
+DROP TABLE IF EXISTS fact_transactions;
+DROP TABLE IF EXISTS dim_date;
+DROP TABLE IF EXISTS dim_entity;
+DROP TABLE IF EXISTS dim_product;
+DROP TABLE IF EXISTS dim_pricetier;
+DROP TABLE IF EXISTS dim_anticipation;
+DROP TABLE IF EXISTS dim_payment;
+
+-- 🔹 Dim_Date com datas contínuas
+CREATE TABLE dim_date (
+    date_id INTEGER PRIMARY KEY,
+    date DATE,
+    day INTEGER,
+    month INTEGER,
+    month_name VARCHAR(15),
+    year INTEGER,
+    weekday_name VARCHAR(15),
+    weekday_number INTEGER
+);
+
+-- Gerar intervalo contínuo de datas
+INSERT INTO dim_date
+SELECT 
+    TO_CHAR(date, 'YYYYMMDD')::int AS date_id,
+    date,
+    EXTRACT(DAY FROM date)::int,
+    EXTRACT(MONTH FROM date)::int,
+    TRIM(TO_CHAR(date, 'Month')) AS month_name,
+    EXTRACT(YEAR FROM date)::int,
+    TRIM(TO_CHAR(date, 'Day')) AS weekday_name,
+    EXTRACT(DOW FROM date)::int AS weekday_number
+FROM generate_series(
+    (SELECT MIN(day) FROM silver.operational_intelligence_transactions_db)::date,
+    (SELECT MAX(day) FROM silver.operational_intelligence_transactions_db)::date,
+    interval '1 day'
+) AS date;
+
+
+-- 🔹 Dim_Entity
+CREATE TABLE dim_entity (
+    entity_id SERIAL PRIMARY KEY,
+    entity_type VARCHAR(10)
+);
+
+INSERT INTO dim_entity (entity_type)
+SELECT DISTINCT entity
+FROM silver.operational_intelligence_transactions_db;
+
+-- 🔹 Dim_Product
+CREATE TABLE dim_product (
+    product_id SERIAL PRIMARY KEY,
+    product_name VARCHAR(50),
+    product_name_origem VARCHAR(50)
+);
+
+INSERT INTO dim_product (product_name, product_name_origem)
+SELECT DISTINCT 
+	case
+		when product = 'bank_slip' then 'bank slip'
+		else product
+	end as product_name, 
+	product as product_name_origem
+FROM silver.operational_intelligence_transactions_db;
+
+-- 🔹 Dim_PriceTier
+CREATE TABLE dim_pricetier (
+    price_tier_id SERIAL PRIMARY KEY,
+    price_tier_name VARCHAR(50)
+);
+
+INSERT INTO dim_pricetier (price_tier_name)
+SELECT DISTINCT price_tier
+FROM silver.operational_intelligence_transactions_db;
+
+-- 🔹 Dim_Anticipation
+CREATE TABLE dim_anticipation (
+    anticipation_id SERIAL PRIMARY KEY,
+    anticipation_method VARCHAR(50),
+    nitro_or_d0 VARCHAR(50)
+);
+
+INSERT INTO dim_anticipation (anticipation_method, nitro_or_d0)
+SELECT DISTINCT 
+    anticipation_method, 
+    COALESCE(NULLIF(TRIM(nitro_or_d0), ''), 'No information') AS nitro_or_d0
+FROM silver.operational_intelligence_transactions_db;
+
+-- 🔹 Dim_Payment
+CREATE TABLE dim_payment (
+    payment_id SERIAL PRIMARY KEY,
+    payment_method VARCHAR(50)
+);
+
+INSERT INTO dim_payment (payment_method)
+SELECT DISTINCT payment_method
+FROM silver.operational_intelligence_transactions_db;
+
+-- 🔹 Fact_Transactions
+CREATE TABLE fact_transactions (
+    transaction_id SERIAL PRIMARY KEY,
+    date_id INTEGER REFERENCES dim_date(date_id),
+    entity_id INTEGER REFERENCES dim_entity(entity_id),
+    product_id INTEGER REFERENCES dim_product(product_id),
+    price_tier_id INTEGER REFERENCES dim_pricetier(price_tier_id),
+    anticipation_id INTEGER REFERENCES dim_anticipation(anticipation_id),
+    payment_id INTEGER REFERENCES dim_payment(payment_id),
+    amount_transacted DOUBLE PRECISION,
+    quantity_transactions INTEGER,
+    quantity_of_merchants INTEGER,
+    installments INTEGER,
+    amount_transacted_installments DOUBLE PRECISION
+);
+
+INSERT INTO fact_transactions (
+    date_id, entity_id, product_id, price_tier_id, anticipation_id, payment_id,
+    amount_transacted, quantity_transactions, quantity_of_merchants, installments, amount_transacted_installments
+)
+SELECT 
+    TO_CHAR(t.day::date, 'YYYYMMDD')::int AS date_id,
+    e.entity_id,
+    p.product_id,
+    pt.price_tier_id,
+    a.anticipation_id,
+    pm.payment_id,
+    t.amount_transacted,
+    t.quantity_transactions,
+    t.quantitu_of_merchants as quantity_of_merchants,
+    t.installments,
+    t.amount_transacted /  t.installments as amount_transacted_installments
+FROM silver.operational_intelligence_transactions_db t
+JOIN dim_entity e 
+    ON t.entity = e.entity_type
+JOIN dim_product p 
+    ON t.product = p.product_name_origem
+JOIN dim_pricetier pt 
+    ON t.price_tier = pt.price_tier_name
+JOIN dim_anticipation a 
+    ON t.anticipation_method = a.anticipation_method
+    AND COALESCE(NULLIF(TRIM(t.nitro_or_d0), ''), 'No information') = a.nitro_or_d0
+JOIN dim_payment pm 
+    ON t.payment_method = pm.payment_method;
+
+-- 🔧 Índices (melhor performance, especialmente para grandes volumes)
+CREATE INDEX idx_fact_transactions_date ON fact_transactions(date_id);
+CREATE INDEX idx_fact_transactions_entity ON fact_transactions(entity_id);
+CREATE INDEX idx_fact_transactions_product ON fact_transactions(product_id);
+CREATE INDEX idx_fact_transactions_price_tier ON fact_transactions(price_tier_id);
+CREATE INDEX idx_fact_transactions_anticipation ON fact_transactions(anticipation_id);
+CREATE INDEX idx_fact_transactions_payment ON fact_transactions(payment_id);
