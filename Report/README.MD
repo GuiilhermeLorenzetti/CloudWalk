@@ -1,6 +1,6 @@
 #Report 
 
-https://github.com/GuiilhermeLorenzetti/CloudWalk/blob/main/imagem/report%20-%20full.png
+![Report Full](https://github.com/GuiilhermeLorenzetti/CloudWalk/raw/main/imagem/report%20-%20full.png)
 
 #Video
 
