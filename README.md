@@ -2,19 +2,19 @@
 
 # Database  
 
-Scrips e mais informações -> link 
+Scripts and More Information -> [link ](https://github.com/GuiilhermeLorenzetti/CloudWalk/tree/main/Database)
 
-Estrutura: 
+### Structure:
 
-Minha ideia aqui foi montar uma arquitetura onde:
+My approach here was to build an architecture where:
 
-Bronze: É o próprio arquivo CSV recebido, que permanece armazenado como fonte original.
+**Bronze:** This is the original CSV file received, which remains stored as the original source.
 
-Silver: O mesmo conteúdo do CSV (1:1 em relação à camada Bronze), mas agora inserido dentro do banco de dados.
+**Silver:** The same content from the CSV (1:1 compared to the Bronze layer), but now inserted into the database.
 
-Gold: Tabelas tratadas e estruturadas para serem utilizadas no dashboard.
+**Gold:** Cleaned and structured tables ready to be used in the dashboard.
 
-Por se tratar de um arquivo pequeno, não houve necessidade de normalização completa no Power BI, nem de criação formal de tabelas fato e dimensão. Optei por seguir dessa forma para demonstrar o caminho que seria adotado com arquivos maiores e mais complexos no dia a dia.
+Since this is a small file, there was no need for full normalization in Power BI or the formal creation of fact and dimension tables. I chose this approach to demonstrate the workflow that would be followed with larger and more complex files in day-to-day scenarios.
 
-Portanto, o arquivo enviado passa por tratamento e normalização na transição da camada Silver para a Gold. Apenas as tabelas da camada Gold são utilizadas no dashboard, aplicando regras de negócio relevantes. A camada Silver é tratada como a fonte de verdade, podendo ser reutilizada em outros projetos.
+Therefore, the file undergoes cleaning and normalization during the transition from the Silver to the Gold layer. Only the Gold layer tables are used in the dashboard, applying relevant business rules. The Silver layer is treated as the source of truth and can be reused in other projects.
 
