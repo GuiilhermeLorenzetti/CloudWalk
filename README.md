@@ -31,7 +31,7 @@ The dashboard was designed with a logic that highlights key indicators at first 
 
 You can find a more detailed description of the visuals, an explanatory video, and the PBIX file at the link provided above.
 
-## Considerations on the Analysis
+# Analysis
 
 All mandatory questions requested in the challenge can be answered through the developed report. In addition, it also addresses common needs such as aggregations, averages, and basic distribution analyses.
 
