@@ -1,5 +1,3 @@
-# CloudWalk
-
 # Database  
 
 Scripts and More Information -> [link ](https://github.com/GuiilhermeLorenzetti/CloudWalk/tree/main/Database)
